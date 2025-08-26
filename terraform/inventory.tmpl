@@ -1,0 +1,16 @@
+[k3s_master]
+${master_name} ansible_host=${master_ip} ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/${master_name}/virtualbox/private_key
+
+[k3s_workers]
+%{ for w in jsondecode(workers) ~}
+${w.name} ansible_host=${w.ip} ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/${w.name}/virtualbox/private_key
+%{ endfor ~}
+
+[k3s_cluster:children]
+k3s_master
+k3s_workers
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+
