@@ -1,0 +1,32 @@
+# Build stage
+FROM rust:1.75-alpine as builder
+
+WORKDIR /usr/src/app
+COPY . .
+
+# Install build dependencies
+RUN apk add --no-cache musl-dev
+
+# Build the application
+RUN cargo build --release
+
+# Runtime stage
+FROM alpine:latest
+
+# Install runtime dependencies
+RUN apk add --no-cache ca-certificates
+
+WORKDIR /usr/local/bin
+
+# Copy the binary from builder stage
+COPY --from=builder /usr/src/app/target/release/cloud-gauntlet-api .
+
+# Create non-root user
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+
+USER appuser
+
+EXPOSE 3000
+
+CMD ["./cloud-gauntlet-api"]
