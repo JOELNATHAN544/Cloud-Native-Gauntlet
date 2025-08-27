@@ -1,5 +1,5 @@
 # Build stage
-FROM rust:1.75-alpine as builder
+FROM docker.io/library/rust:1.75-alpine as builder
 
 WORKDIR /usr/src/app
 COPY . .
@@ -11,7 +11,7 @@ RUN apk add --no-cache musl-dev
 RUN cargo build --release
 
 # Runtime stage
-FROM alpine:latest
+FROM docker.io/library/alpine:latest
 
 # Install runtime dependencies
 RUN apk add --no-cache ca-certificates
