@@ -37,3 +37,4 @@ pub fn validate_token(token: &str, secret: &str) -> Result<Claims, jsonwebtoken:
     )
     .map(|data| data.claims)
 }
+
