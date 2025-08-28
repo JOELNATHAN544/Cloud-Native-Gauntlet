@@ -26,28 +26,28 @@ spec:
         app: keycloak
     spec:
       containers:
-      - name: keycloak
-        image: quay.io/keycloak/keycloak:latest
-        args: ["start-dev"]
-        env:
-        - name: KEYCLOAK_ADMIN
-          value: "admin"
-        - name: KEYCLOAK_ADMIN_PASSWORD
-          value: "admin"
-        - name: KC_DB
-          value: "postgresql"
-        - name: KC_DB_URL
-          value: "jdbc:postgresql://postgres.database.svc.cluster.local:5432/keycloak"
-        - name: KC_DB_USERNAME
-          value: "keycloak"
-        - name: KC_DB_PASSWORD
-          value: "keycloak"
-        ports:
-        - containerPort: 8080
-        volumeMounts:
-        - name: keycloak-data
-          mountPath: /opt/keycloak/data
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:latest
+          args: ["start-dev"]
+          env:
+            - name: KEYCLOAK_ADMIN
+              value: "admin"
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: "admin"
+            - name: KC_DB
+              value: "postgresql"
+            - name: KC_DB_URL
+              value: "jdbc:postgresql://postgres.database.svc.cluster.local:5432/keycloak"
+            - name: KC_DB_USERNAME
+              value: "keycloak"
+            - name: KC_DB_PASSWORD
+              value: "keycloak"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: keycloak-data
+              mountPath: /opt/keycloak/data
       volumes:
-      - name: keycloak-data
-        persistentVolumeClaim:
-          claimName: keycloak-pvc
+        - name: keycloak-data
+          persistentVolumeClaim:
+            claimName: keycloak-pvc
