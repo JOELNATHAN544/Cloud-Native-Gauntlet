@@ -7,14 +7,14 @@ spec:
   selector:
     app: gitea
   ports:
-  - name: http
-    port: 80
-    targetPort: 3000
-    protocol: TCP
-  - name: ssh
-    port: 22
-    targetPort: 222
-    protocol: TCP
+    - name: http
+      port: 80
+      targetPort: 3000
+      protocol: TCP
+    - name: ssh
+      port: 22
+      targetPort: 222
+      protocol: TCP
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -27,13 +27,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: gitea.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: gitea
-            port:
-              number: 80
+    - host: gitea.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gitea
+                port:
+                  number: 80
