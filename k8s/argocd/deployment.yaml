@@ -26,20 +26,20 @@ spec:
         app: argocd-server
     spec:
       containers:
-      - name: argocd-server
-        image: quay.io/argoproj/argocd:latest
-        ports:
-        - containerPort: 8080
-        - containerPort: 8083
-        env:
-        - name: ARGOCD_SERVER_INSTANCE_LABEL_KEY
-          value: "app.kubernetes.io/instance"
-        - name: ARGOCD_SERVER_INSTANCE_LABEL_VALUE
-          value: "argocd"
-        volumeMounts:
-        - name: argocd-data
-          mountPath: /home/argocd
+        - name: argocd-server
+          image: quay.io/argoproj/argocd:latest
+          ports:
+            - containerPort: 8080
+            - containerPort: 8083
+          env:
+            - name: ARGOCD_SERVER_INSTANCE_LABEL_KEY
+              value: "app.kubernetes.io/instance"
+            - name: ARGOCD_SERVER_INSTANCE_LABEL_VALUE
+              value: "argocd"
+          volumeMounts:
+            - name: argocd-data
+              mountPath: /home/argocd
       volumes:
-      - name: argocd-data
-        persistentVolumeClaim:
-          claimName: argocd-pvc
+        - name: argocd-data
+          persistentVolumeClaim:
+            claimName: argocd-pvc
