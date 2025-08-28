@@ -1,0 +1,86 @@
+graph TB
+    subgraph "Host Machine"
+        A[Multipass CLI]
+        B[Local Files]
+    end
+    
+    subgraph "Multipass VM (k3s)"
+        subgraph "K3s Cluster"
+            C[K3s Control Plane]
+            
+            subgraph "App Namespace"
+                D[Rust API Pod]
+                E[Rust API Service]
+            end
+            
+            subgraph "Keycloak Namespace"
+                F[Keycloak Pod]
+                G[Keycloak Service]
+            end
+            
+            subgraph "Gitea Namespace"
+                H[Gitea Pod]
+                I[Gitea Service]
+            end
+            
+            subgraph "Registry Namespace"
+                J[Local Registry Pod]
+                K[Registry Service]
+            end
+            
+            subgraph "Database Namespace"
+                L[PostgreSQL Pod]
+                M[Database Service]
+            end
+            
+            subgraph "CNPG System"
+                N[CNPG Controller]
+                O[Webhook Service]
+            end
+            
+            subgraph "Linkerd System"
+                P[Linkerd Controller]
+                Q[Linkerd Viz]
+            end
+            
+            subgraph "ArgoCD System"
+                R[ArgoCD Server]
+                S[ArgoCD Repo]
+            end
+        end
+        
+        T[NGINX Ingress]
+        U[Local Storage]
+    end
+    
+    A --> C
+    B --> C
+    C --> D
+    C --> F
+    C --> H
+    C --> J
+    C --> L
+    C --> N
+    C --> P
+    C --> R
+    
+    D --> E
+    F --> G
+    H --> I
+    J --> K
+    L --> M
+    
+    T --> E
+    T --> G
+    T --> I
+    
+    U --> D
+    U --> F
+    U --> H
+    U --> J
+    U --> L
+    
+    style A fill:#e1f5fe
+    style C fill:#c8e6c9
+    style T fill:#fff3e0
+    style U fill:#f3e5f5
