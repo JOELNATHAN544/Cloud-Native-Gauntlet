@@ -18,5 +18,3 @@
       until: kubeconfig.stat.exists
       retries: 20
       delay: 6
-
-
