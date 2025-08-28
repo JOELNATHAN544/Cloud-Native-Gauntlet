@@ -7,9 +7,9 @@ spec:
   selector:
     app: keycloak
   ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -22,13 +22,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: keycloak.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: keycloak
-            port:
-              number: 80
+    - host: keycloak.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 80
