@@ -31,20 +31,20 @@ spec:
         app: local-registry
     spec:
       containers:
-      - name: registry
-        image: registry:2
-        ports:
-        - containerPort: 5000
-        env:
-        - name: REGISTRY_STORAGE_DELETE_ENABLED
-          value: "true"
-        volumeMounts:
-        - name: registry-storage
-          mountPath: /var/lib/registry
+        - name: registry
+          image: registry:2
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REGISTRY_STORAGE_DELETE_ENABLED
+              value: "true"
+          volumeMounts:
+            - name: registry-storage
+              mountPath: /var/lib/registry
       volumes:
-      - name: registry-storage
-        persistentVolumeClaim:
-          claimName: registry-pvc
+        - name: registry-storage
+          persistentVolumeClaim:
+            claimName: registry-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -55,5 +55,5 @@ spec:
   selector:
     app: local-registry
   ports:
-  - port: 5000
-    targetPort: 5000
+    - port: 5000
+      targetPort: 5000
