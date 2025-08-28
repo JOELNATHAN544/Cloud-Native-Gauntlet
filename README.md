@@ -3,6 +3,7 @@
 A fully offline, idempotent, local, cloud-native stack to torture your laptop and earn bragging rights. This repo is structured to implement the full assignment in progressive, testable steps.
 
 ### High-Level Goals
+
 - End-to-end local cluster with K3s on Vagrant VMs
 - Infra provisioned via Terraform, configured via Ansible
 - Rust API (Axum) with JWT auth, Postgres (CloudNativePG), SQLx
@@ -14,6 +15,7 @@ A fully offline, idempotent, local, cloud-native stack to torture your laptop an
 - Documentation and Mermaid diagrams
 
 ### Repository Layout (initial)
+
 ```
 ansible/
   playbooks/
@@ -28,6 +30,7 @@ terraform/
 As we progress, we will fill in each section with working, testable components.
 
 ### Work Plan (Twelve Trials mapped)
+
 1. Summon the Cluster Beasts
    - Vagrant: 1–2 Ubuntu VMs with private networking
    - Terraform: render inventory and variables for Ansible
@@ -51,16 +54,19 @@ As we progress, we will fill in each section with working, testable components.
    - Mermaid diagrams: architecture, pipeline, auth flow
 
 ### Idempotence Principles
+
 - All scripts and playbooks must be safe to re-run
 - Terraform state kept locally; Ansible uses checks and handlers
 - Kubernetes uses declarative manifests with clear ownership
 
 ### Prerequisites
+
 - Host: Linux with Vagrant + VirtualBox/Libvirt (or Multipass w/ minor tweaks)
 - Enough disk and RAM (recommend 16GB RAM, 4 CPUs minimum)
 - Bash, Make, Docker/Podman locally for builds and image mirroring
 
 ### Getting Started (will evolve)
+
 ```bash
 # 0) Ensure Vagrant and a provider are installed
 vagrant --version
@@ -76,9 +82,9 @@ vagrant up
 ```
 
 ### Diagrams
+
 Diagrams will be added under `docs/diagrams` and kept in Mermaid format. Rendered previews will be committed as images for offline viewing.
 
 ### License
+
 MIT
-
-
