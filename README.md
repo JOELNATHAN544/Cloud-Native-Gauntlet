@@ -1,90 +1,186 @@
-## Cloud-Native Gauntlet
+# ⚔️ Cloud-Native Gauntlet: Your Two-Week Ordeal ⚔️
 
-A fully offline, idempotent, local, cloud-native stack to torture your laptop and earn bragging rights. This repo is structured to implement the full assignment in progressive, testable steps.
+## 🎯 Project Status: Day 6-7 (Database & Deployment)
 
-### High-Level Goals
+**Current Progress**: We have successfully deployed most components to K3s, but need to resolve image availability issues to complete the stack.
 
-- End-to-end local cluster with K3s on Vagrant VMs
-- Infra provisioned via Terraform, configured via Ansible
-- Rust API (Axum) with JWT auth, Postgres (CloudNativePG), SQLx
-- Keycloak for identity and JWT validation
-- GitOps via Gitea + ArgoCD (offline)
-- Service mesh with Linkerd (mTLS, viz)
-- Offline registry and image mirroring
-- Idempotent scripts and reproducible flows
-- Documentation and Mermaid diagrams
+### ✅ Completed Components
+- **K3s Cluster**: Running on Multipass VM (Ubuntu 24.04)
+- **Rust API**: Complete Axum application with JWT auth, models, and routes
+- **Kubernetes Manifests**: App, Keycloak, Gitea, Registry, and CNPG deployments
+- **Local Registry**: Container registry for offline image storage
+- **Documentation**: Architecture docs and Mermaid diagrams
 
-### Repository Layout (initial)
+### 🔄 Current Status
+- **App Namespace**: Rust API deployed (pending image)
+- **Keycloak Namespace**: Identity service deployed (pending image)
+- **Gitea Namespace**: Git server deployed (pending image)
+- **Registry Namespace**: Local registry running successfully
+- **CNPG System**: Operator deployed but needs troubleshooting
 
+### 🚧 Next Steps
+1. **Resolve Image Issues**: Build and load Rust API image locally
+2. **Complete CNPG**: Fix CloudNativePG operator or use alternative
+3. **Deploy ArgoCD**: Complete GitOps pipeline
+4. **Install Linkerd**: Add service mesh capabilities
+5. **End-to-End Testing**: Validate complete workflow
+
+## 🏗️ Architecture Overview
+
+### System Components
 ```
-ansible/
-  playbooks/
-  roles/
-apps/
-  rust-api/
-docs/
-scripts/
-terraform/
+Host Machine (Multipass) → K3s Cluster → Application Stack
+                                    ├── Rust API (Axum + JWT)
+                                    ├── Keycloak (Identity)
+                                    ├── Gitea (Git Server)
+                                    ├── Local Registry
+                                    ├── CloudNativePG
+                                    ├── ArgoCD (GitOps)
+                                    └── Linkerd (Service Mesh)
 ```
 
-As we progress, we will fill in each section with working, testable components.
+### Key Features
+- **Offline-First**: All components work without internet
+- **JWT Authentication**: Keycloak-managed tokens
+- **GitOps Pipeline**: Gitea + ArgoCD for continuous deployment
+- **Service Mesh**: Linkerd for mTLS and observability
+- **Idempotent**: Safe to re-run all scripts
 
-### Work Plan (Twelve Trials mapped)
-
-1. Summon the Cluster Beasts
-   - Vagrant: 1–2 Ubuntu VMs with private networking
-   - Terraform: render inventory and variables for Ansible
-   - Ansible: base packages, users, SSH hardening, K3s prerequisites
-   - Offline DNS/hosts scaffolding; optional local registry
-2. Forge the Application
-   - Axum + SQLx + JWT (Keycloak-compatible) + migrations
-   - Entities: `User`, `Task`
-3. Containerize
-   - Multi-stage Dockerfile, local build, load to registry
-4. Database & Deployment
-   - CloudNativePG operator + Postgres cluster CR
-   - K8s manifests: Deployment, Service, Ingress, ConfigMaps, Secrets
-5. Keycloak
-   - Deployment, realm/client bootstrap, JWT validation in app
-6. GitOps
-   - Gitea; ArgoCD sync from infra repo
-7. Mesh
-   - Linkerd + viz, namespace injection, mTLS verification
-8. Documentation
-   - Mermaid diagrams: architecture, pipeline, auth flow
-
-### Idempotence Principles
-
-- All scripts and playbooks must be safe to re-run
-- Terraform state kept locally; Ansible uses checks and handlers
-- Kubernetes uses declarative manifests with clear ownership
+## 🚀 Quick Start
 
 ### Prerequisites
+- Linux host with Multipass
+- 16GB RAM, 4 CPUs minimum
+- 50GB free disk space
 
-- Host: Linux with Vagrant + VirtualBox/Libvirt (or Multipass w/ minor tweaks)
-- Enough disk and RAM (recommend 16GB RAM, 4 CPUs minimum)
-- Bash, Make, Docker/Podman locally for builds and image mirroring
-
-### Getting Started (will evolve)
-
+### 1. Bootstrap Environment
 ```bash
-# 0) Ensure Vagrant and a provider are installed
-vagrant --version
+# Start Multipass VM
+multipass launch -n k3s
 
-# 1) Bring up base VMs (coming next step)
-vagrant up
-
-# 2) Bootstrap infra with Terraform → Ansible
-# make bootstrap (TBD)
-
-# 3) Install K3s and validate (TBD)
-# make k3s
+# Bootstrap SSH and Ansible
+bash scripts/multipass_bootstrap.sh k3s $HOME/.ssh/id_ed25519.pub
 ```
 
-### Diagrams
+### 2. Deploy Infrastructure
+```bash
+# Apply base OS configuration
+ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook -i ansible/inventory.ini ansible/playbooks/base.yml
 
-Diagrams will be added under `docs/diagrams` and kept in Mermaid format. Rendered previews will be committed as images for offline viewing.
+# Deploy application stack
+multipass exec k3s -- sudo k3s kubectl apply -f /home/ubuntu/app-namespace.yaml
+# ... (other manifests)
+```
 
-### License
+### 3. Check Status
+```bash
+# View all components
+scripts/status-check.sh
 
-MIT
+# Check specific namespace
+multipass exec k3s -- sudo k3s kubectl -n app get all
+```
+
+## 📁 Project Structure
+
+```
+Cloud-Native-Gauntlet/
+├── ansible/           # Infrastructure automation
+├── apps/             # Application source code
+│   └── rust-api/     # Rust API with Axum
+├── k8s/              # Kubernetes manifests
+│   ├── app/          # Rust API deployment
+│   ├── keycloak/     # Identity service
+│   ├── gitea/        # Git server
+│   ├── registry/     # Local container registry
+│   └── argocd/       # GitOps controller
+├── scripts/           # Automation scripts
+├── docs/             # Documentation and diagrams
+│   └── diagrams/     # Mermaid architecture diagrams
+└── terraform/        # Infrastructure as Code
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+1. **ImagePullBackOff**: Images not available in local registry
+2. **CNPG CrashLoop**: Operator compatibility issues with K3s 1.32
+3. **Network Timeouts**: External registry access blocked (expected for offline mode)
+
+### Solutions
+- Use local registry for all images
+- Build images locally with podman/docker
+- Check pod logs: `kubectl logs <pod-name> -n <namespace>`
+- Verify storage: `kubectl get pvc -A`
+
+## 📊 Progress Tracking
+
+### Day 1-2: ✅ Cluster Setup
+- [x] Multipass VM creation
+- [x] K3s installation
+- [x] Base OS configuration
+
+### Day 3-4: ✅ Application Development
+- [x] Rust API with Axum
+- [x] JWT authentication
+- [x] Task management endpoints
+
+### Day 5: 🔄 Containerization
+- [x] Dockerfile creation
+- [x] Local registry setup
+- [ ] Image building and loading
+
+### Day 6-7: 🔄 Database & Deployment
+- [x] Kubernetes manifests
+- [x] Component deployment
+- [ ] Image availability resolution
+
+### Day 8: 🔄 Keycloak
+- [x] Deployment manifests
+- [ ] Service configuration
+- [ ] JWT integration
+
+### Day 9-10: 🔄 GitOps
+- [x] Gitea deployment
+- [ ] ArgoCD setup
+- [ ] Pipeline configuration
+
+### Day 11: 🔄 Service Mesh
+- [ ] Linkerd installation
+- [ ] mTLS configuration
+- [ ] Observability setup
+
+### Day 12: 🔄 Documentation
+- [x] Architecture documentation
+- [x] Mermaid diagrams
+- [ ] Final testing and validation
+
+## 🎭 Comic Relief
+
+> "In YAML, no one can hear you scream" 😱📄
+> 
+> "kubectl describe is your friend" 🙏
+> 
+> "When in doubt, check the logs" 🔍
+
+## 📚 Resources
+
+- [K3s Documentation](https://docs.k3s.io/)
+- [Keycloak Documentation](https://www.keycloak.org/documentation)
+- [Linkerd Documentation](https://linkerd.io/docs/)
+- [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
+
+## 🏆 Victory Conditions
+
+- [ ] Entire system runs offline
+- [ ] Infra + configs are idempotent
+- [ ] GitOps pipeline works
+- [ ] Keycloak protects app
+- [ ] Linkerd provides mTLS
+- [ ] Complete documentation included
+
+---
+
+**Remember**: This is not a cozy group project. Each of you must suffer alone, staring at logs like hieroglyphics. But that hatred fuels victory! 🔥
+
+*Now go forth and conquer the Cloud-Native Gauntlet!* ⚔️
