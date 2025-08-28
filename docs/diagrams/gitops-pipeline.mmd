@@ -1,0 +1,50 @@
+graph LR
+    subgraph "Development"
+        A[Developer]
+        B[Local Code]
+        C[Git Repository]
+    end
+    
+    subgraph "GitOps Pipeline"
+        D[Gitea]
+        E[ArgoCD]
+        F[K3s Cluster]
+    end
+    
+    subgraph "Deployment"
+        G[Rust API Pod]
+        H[Keycloak Pod]
+        I[Gitea Pod]
+        J[Registry Pod]
+    end
+    
+    subgraph "Monitoring"
+        K[Linkerd Viz]
+        L[Health Checks]
+        M[Rollback]
+    end
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    F --> H
+    F --> I
+    F --> J
+    
+    G --> K
+    H --> K
+    I --> K
+    J --> K
+    
+    K --> L
+    L --> M
+    M --> F
+    
+    style A fill:#e3f2fd
+    style D fill:#e8f5e8
+    style E fill:#fff3e0
+    style F fill:#f3e5f5
+    style K fill:#fce4ec
