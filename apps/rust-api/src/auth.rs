@@ -15,7 +15,7 @@ impl Claims {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_secs();
-        
+
         Self {
             sub: user_id,
             iat: now,
@@ -26,7 +26,11 @@ impl Claims {
 
 pub fn create_token(user_id: String, secret: &str) -> Result<String, jsonwebtoken::errors::Error> {
     let claims = Claims::new(user_id);
-    encode(&Header::default(), &claims, &EncodingKey::from_secret(secret.as_ref()))
+    encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(secret.as_ref()),
+    )
 }
 
 pub fn validate_token(token: &str, secret: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
@@ -37,4 +41,3 @@ pub fn validate_token(token: &str, secret: &str) -> Result<Claims, jsonwebtoken:
     )
     .map(|data| data.claims)
 }
-
