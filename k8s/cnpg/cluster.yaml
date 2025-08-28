@@ -20,5 +20,3 @@ spec:
     name: app-db-superuser
   enableSuperuserAccess: true
   primaryUpdateStrategy: unsupervised
-
-
