@@ -1,0 +1,31 @@
+sequenceDiagram
+    participant U as User
+    participant A as Rust API
+    participant K as Keycloak
+    participant D as Database
+    
+    Note over U,D: Authentication Flow
+    
+    U->>K: POST /auth/login (username, password)
+    K->>D: Validate credentials
+    D-->>K: User data
+    K->>K: Generate JWT token
+    K-->>U: JWT token + user info
+    
+    Note over U,A: API Access with JWT
+    
+    U->>A: GET /api/tasks (Authorization: Bearer <JWT>)
+    A->>A: Validate JWT signature
+    A->>A: Extract user claims
+    A->>D: Query tasks for user
+    D-->>A: Task data
+    A-->>U: Tasks list
+    
+    Note over U,A: Protected Resource Access
+    
+    U->>A: POST /api/tasks (Authorization: Bearer <JWT>)
+    A->>A: Validate JWT token
+    A->>A: Check token expiration
+    A->>D: Create new task
+    D-->>A: Task created
+    A-->>U: New task data
