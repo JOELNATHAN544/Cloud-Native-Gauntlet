@@ -6,6 +6,7 @@ use crate::{
     models::{LoginRequest, LoginResponse, User},
 };
 
+
 pub async fn login(Json(payload): Json<LoginRequest>) -> Result<Json<LoginResponse>, StatusCode> {
     // Mock authentication - will be replaced with database lookup
     if payload.username == "admin" && payload.password == "password" {
