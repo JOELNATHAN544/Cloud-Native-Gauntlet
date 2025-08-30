@@ -5,6 +5,7 @@
 **Current Progress**: We have successfully deployed most components to K3s, but need to resolve image availability issues to complete the stack.
 
 ### ✅ Completed Components
+
 - **K3s Cluster**: Running on Multipass VM (Ubuntu 24.04)
 - **Rust API**: Complete Axum application with JWT auth, models, and routes
 - **Kubernetes Manifests**: App, Keycloak, Gitea, Registry, and CNPG deployments
@@ -12,6 +13,7 @@
 - **Documentation**: Architecture docs and Mermaid diagrams
 
 ### 🔄 Current Status
+
 - **App Namespace**: Rust API deployed (pending image)
 - **Keycloak Namespace**: Identity service deployed (pending image)
 - **Gitea Namespace**: Git server deployed (pending image)
@@ -19,6 +21,7 @@
 - **CNPG System**: Operator deployed but needs troubleshooting
 
 ### 🚧 Next Steps
+
 1. **Resolve Image Issues**: Build and load Rust API image locally
 2. **Complete CNPG**: Fix CloudNativePG operator or use alternative
 3. **Deploy ArgoCD**: Complete GitOps pipeline
@@ -28,6 +31,7 @@
 ## 🏗️ Architecture Overview
 
 ### System Components
+
 ```
 Host Machine (Multipass) → K3s Cluster → Application Stack
                                     ├── Rust API (Axum + JWT)
@@ -40,6 +44,7 @@ Host Machine (Multipass) → K3s Cluster → Application Stack
 ```
 
 ### Key Features
+
 - **Offline-First**: All components work without internet
 - **JWT Authentication**: Keycloak-managed tokens
 - **GitOps Pipeline**: Gitea + ArgoCD for continuous deployment
@@ -49,11 +54,13 @@ Host Machine (Multipass) → K3s Cluster → Application Stack
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Linux host with Multipass
 - 16GB RAM, 4 CPUs minimum
 - 50GB free disk space
 
 ### 1. Bootstrap Environment
+
 ```bash
 # Start Multipass VM
 multipass launch -n k3s
@@ -63,6 +70,7 @@ bash scripts/multipass_bootstrap.sh k3s $HOME/.ssh/id_ed25519.pub
 ```
 
 ### 2. Deploy Infrastructure
+
 ```bash
 # Apply base OS configuration
 ANSIBLE_CONFIG=ansible/ansible.cfg ansible-playbook -i ansible/inventory.ini ansible/playbooks/base.yml
@@ -73,6 +81,7 @@ multipass exec k3s -- sudo k3s kubectl apply -f /home/ubuntu/app-namespace.yaml
 ```
 
 ### 3. Check Status
+
 ```bash
 # View all components
 scripts/status-check.sh
@@ -103,11 +112,13 @@ Cloud-Native-Gauntlet/
 ## 🔧 Troubleshooting
 
 ### Common Issues
+
 1. **ImagePullBackOff**: Images not available in local registry
 2. **CNPG CrashLoop**: Operator compatibility issues with K3s 1.32
 3. **Network Timeouts**: External registry access blocked (expected for offline mode)
 
 ### Solutions
+
 - Use local registry for all images
 - Build images locally with podman/docker
 - Check pod logs: `kubectl logs <pod-name> -n <namespace>`
@@ -116,41 +127,49 @@ Cloud-Native-Gauntlet/
 ## 📊 Progress Tracking
 
 ### Day 1-2: ✅ Cluster Setup
+
 - [x] Multipass VM creation
 - [x] K3s installation
 - [x] Base OS configuration
 
 ### Day 3-4: ✅ Application Development
+
 - [x] Rust API with Axum
 - [x] JWT authentication
 - [x] Task management endpoints
 
 ### Day 5: 🔄 Containerization
+
 - [x] Dockerfile creation
 - [x] Local registry setup
 - [ ] Image building and loading
 
 ### Day 6-7: 🔄 Database & Deployment
+
 - [x] Kubernetes manifests
 - [x] Component deployment
 - [ ] Image availability resolution
 
 ### Day 8: 🔄 Keycloak
+
 - [x] Deployment manifests
 - [ ] Service configuration
 - [ ] JWT integration
 
 ### Day 9-10: 🔄 GitOps
+
 - [x] Gitea deployment
 - [ ] ArgoCD setup
 - [ ] Pipeline configuration
 
 ### Day 11: 🔄 Service Mesh
+
 - [ ] Linkerd installation
 - [ ] mTLS configuration
 - [ ] Observability setup
 
 ### Day 12: 🔄 Documentation
+
 - [x] Architecture documentation
 - [x] Mermaid diagrams
 - [ ] Final testing and validation
@@ -158,9 +177,9 @@ Cloud-Native-Gauntlet/
 ## 🎭 Comic Relief
 
 > "In YAML, no one can hear you scream" 😱📄
-> 
+>
 > "kubectl describe is your friend" 🙏
-> 
+>
 > "When in doubt, check the logs" 🔍
 
 ## 📚 Resources
@@ -183,4 +202,4 @@ Cloud-Native-Gauntlet/
 
 **Remember**: This is not a cozy group project. Each of you must suffer alone, staring at logs like hieroglyphics. But that hatred fuels victory! 🔥
 
-*Now go forth and conquer the Cloud-Native Gauntlet!* ⚔️
+_Now go forth and conquer the Cloud-Native Gauntlet!_ ⚔️
