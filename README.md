@@ -12,13 +12,7 @@
 - **Local Registry**: Container registry for offline image storage
 - **Documentation**: Architecture docs and Mermaid diagrams
 
-### 🔄 Current Status
 
-- **App Namespace**: Rust API deployed (pending image)
-- **Keycloak Namespace**: Identity service deployed (pending image)
-- **Gitea Namespace**: Git server deployed (pending image)
-- **Registry Namespace**: Local registry running successfully
-- **CNPG System**: Operator deployed but needs troubleshooting
 
 ### 🚧 Next Steps
 
