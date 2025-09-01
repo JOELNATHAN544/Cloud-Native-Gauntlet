@@ -202,4 +202,4 @@ Cloud-Native-Gauntlet/
 
 **Remember**: This is not a cozy group project. Each of you must suffer alone, staring at logs like hieroglyphics. But that hatred fuels victory! 🔥
 
-_Now go forth and conquer the Cloud-Native Gauntlet!_ ⚔️
+_Now go forth and conquer the Cloud-Native Gauntlet!._ ⚔️
