@@ -9,7 +9,6 @@
     name: "{{ base_packages }}"
     state: present
 
-
 - name: Disable swap (required by Kubernetes)
   command: swapoff -a
   when: ansible_swaptotal_mb | int > 0
