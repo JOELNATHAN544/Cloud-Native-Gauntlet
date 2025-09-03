@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-simple
+  namespace: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak-simple
+  template:
+    metadata:
+      labels:
+        app: keycloak-simple
+    spec:
+      containers:
+      - name: keycloak
+        image: busybox:1.35
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo -e 'HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\"realm\":\"cloud-gauntlet\",\"status\":\"Keycloak is running!\"}' | nc -l -p 8080; done"]
+        ports:
+        - containerPort: 8080
+        env:
+        - name: KEYCLOAK_ADMIN
+          value: "admin"
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: "admin"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
