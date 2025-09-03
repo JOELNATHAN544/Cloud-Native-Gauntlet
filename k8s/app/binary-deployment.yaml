@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rust-api-binary
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rust-api-binary
+  template:
+    metadata:
+      labels:
+        app: rust-api-binary
+    spec:
+      hostNetwork: true
+      containers:
+      - name: rust-api
+        image: busybox:1.35
+        command: ["/bin/sh"]
+        args: ["-c", "chmod +x /app/rust-api-binary && /app/rust-api-binary"]
+        volumeMounts:
+        - name: app-binary
+          mountPath: /app
+        env:
+        - name: RUST_LOG
+          value: "info"
+        - name: JWT_SECRET
+          value: "your-secret-key-change-in-production"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: app-binary
+        hostPath:
+          path: /home/ubuntu
+          type: Directory
