@@ -1,0 +1,21 @@
+# Simple runtime image with pre-built binary
+FROM docker.io/library/alpine:latest
+
+# Install runtime dependencies
+RUN apk add --no-cache ca-certificates
+
+WORKDIR /usr/local/bin
+
+# Copy the pre-built binary
+COPY target/release/cloud-gauntlet-api .
+
+# Create non-root user
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+
+USER appuser
+
+EXPOSE 3000
+
+CMD ["./cloud-gauntlet-api"]
+
