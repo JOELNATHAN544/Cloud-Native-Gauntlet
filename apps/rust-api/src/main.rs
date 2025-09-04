@@ -85,7 +85,7 @@ async fn main() {
         .route("/api/tasks", get(routes::tasks::list_tasks))
         .route("/api/tasks", post(routes::tasks::create_task))
         .route("/api/auth/login", post(routes::auth::login))
-        .with_state(ctx)
+        .with_state(auth_state)
         .layer(cors);
 
     // Run it
