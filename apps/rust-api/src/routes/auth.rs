@@ -1,10 +1,7 @@
 use axum::{http::StatusCode, Json};
 use uuid::Uuid;
 
-use crate::{
-    auth,
-    models::{LoginRequest, LoginResponse, User},
-};
+use crate::models::{LoginRequest, LoginResponse, User};
 
 
 pub async fn login(Json(payload): Json<LoginRequest>) -> Result<Json<LoginResponse>, StatusCode> {
@@ -18,10 +15,7 @@ pub async fn login(Json(payload): Json<LoginRequest>) -> Result<Json<LoginRespon
             updated_at: chrono::Utc::now(),
         };
 
-        let token = auth::create_token(user.id.to_string(), "your-secret-key")
-            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-
-        Ok(Json(LoginResponse { token, user }))
+        Ok(Json(LoginResponse { token: "not-implemented".to_string(), user }))
     } else {
         Err(StatusCode::UNAUTHORIZED)
     }
