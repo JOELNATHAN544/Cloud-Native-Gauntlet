@@ -1,5 +1,5 @@
 # Build stage
-FROM docker.io/library/rust:1.82-alpine as builder
+FROM docker.io/library/rust:1.83-alpine as builder
 
 WORKDIR /usr/src/app
 COPY . .
