@@ -77,19 +77,6 @@ impl AuthState {
     }
 
     pub async fn validate_bearer(&self, bearer_token: &str) -> anyhow::Result<Claims> {
-        // Temporarily bypass JWT validation for testing
-        if bearer_token == "test-token" {
-            return Ok(Claims {
-                sub: "test-user-id".to_string(),
-                exp: (chrono::Utc::now().timestamp() + 3600) as usize,
-                iat: chrono::Utc::now().timestamp() as usize,
-                iss: Some("http://10.72.220.223:8080/realms/gauntlet".to_string()),
-                aud: None,
-                preferred_username: Some("testuser".to_string()),
-                email: Some("test@example.com".to_string()),
-            });
-        }
-        
         // Extract header to get kid
         let header = jsonwebtoken::decode_header(bearer_token)?;
         let kid = header.kid.ok_or_else(|| anyhow::anyhow!("missing kid"))?;
@@ -99,7 +86,7 @@ impl AuthState {
             .ok_or_else(|| anyhow::anyhow!("no key for kid"))?;
         let mut validation = Validation::new(Algorithm::RS256);
         validation.set_issuer(&[self.config.issuer.clone()]);
-        // Temporarily disable strict audience validation to accommodate Keycloak tokens
+        // Disable strict audience validation to accommodate Keycloak tokens
         validation.validate_aud = false;
         let data = decode::<Claims>(bearer_token, &key, &validation)?;
         Ok(data.claims)
