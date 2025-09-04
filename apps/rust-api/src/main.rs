@@ -85,7 +85,7 @@ async fn main() {
         .route("/api/tasks", get(routes::tasks::list_tasks))
         .route("/api/tasks", post(routes::tasks::create_task))
         .route("/api/auth/login", post(routes::auth::login))
-        .with_state(auth_state)
+        .with_state(ctx)
         .layer(cors);
 
     // Run it
@@ -96,6 +96,10 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn health_check() -> &'static str {
-    "OK"
+async fn health_check() -> axum::Json<serde_json::Value> {
+    axum::Json(serde_json::json!({
+        "status": "OK",
+        "message": "Cloud-Native Gauntlet Rust API is running!",
+        "endpoints": ["/health", "/api/tasks", "/api/auth/login"]
+    }))
 }
