@@ -30,7 +30,7 @@ spec:
         - name: KEYCLOAK_ADMIN_PASSWORD
           value: "admin123"
         - name: KC_DB
-          value: "h2-file"
+          value: "dev-file"
         - name: KC_HOSTNAME_STRICT
           value: "false"
         - name: KC_HOSTNAME_STRICT_HTTPS
