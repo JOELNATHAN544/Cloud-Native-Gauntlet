@@ -87,7 +87,7 @@ impl AuthState {
         let mut validation = Validation::new(Algorithm::RS256);
         validation.set_issuer(&[self.config.issuer.clone()]);
         // Disable strict audience validation to accommodate Keycloak tokens
-        validation.validate_aud = false;
+        validation.set_audience(&[]);
         let data = decode::<Claims>(bearer_token, &key, &validation)?;
         Ok(data.claims)
     }
