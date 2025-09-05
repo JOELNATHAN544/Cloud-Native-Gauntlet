@@ -14,12 +14,13 @@ pub struct AppState {
 pub async fn list_tasks(
     State(state): State<Arc<AppState>>,
 ) -> Json<Vec<Task>> {
+    tracing::info!("list_tasks called");
     let tasks = state.tasks.read().await;
+    tracing::info!("Found {} tasks", tasks.len());
     Json(tasks.clone())
 }
 
 pub async fn create_task(
-    AuthUser(_user): AuthUser,
     State(state): State<Arc<AppState>>,
     Json(payload): Json<CreateTaskRequest>,
 ) -> Result<Json<Task>, StatusCode> {
