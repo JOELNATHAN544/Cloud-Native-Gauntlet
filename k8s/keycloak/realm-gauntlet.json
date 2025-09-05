@@ -1,0 +1,53 @@
+{
+  "realm": "gauntlet",
+  "enabled": true,
+  "displayName": "Cloud-Native Gauntlet",
+  "loginWithEmailAllowed": true,
+  "registrationAllowed": false,
+  "rememberMe": true,
+  "resetPasswordAllowed": true,
+  "clients": [
+    {
+      "clientId": "rust-api",
+      "name": "Rust API",
+      "protocol": "openid-connect",
+      "enabled": true,
+      "publicClient": false,
+      "bearerOnly": false,
+      "serviceAccountsEnabled": false,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "authorizationServicesEnabled": false,
+      "redirectUris": [
+        "http://10.72.220.223:8080/*",
+        "http://localhost:3000/*",
+        "http://localhost:3001/*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
+      "attributes": {
+        "access.token.lifespan": "900"
+      },
+      "secret": "CHANGE_ME_IN_PROD"
+    }
+  ],
+  "users": [
+    {
+      "username": "demo",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "demo",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}
+
+
+
