@@ -14,5 +14,7 @@
 /.idea/
 /.venv/
 __pycache__/
-
+# Ignore all .json and .tar files
+# **/*.json
+**/*.tar
 
